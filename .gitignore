@@ -1,0 +1,10 @@
+*
+!/**/
+!*.*
+!Makefile
+.vscode
+*.out
+*.out
+*.bin
+*.log
+*.a
