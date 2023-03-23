@@ -23,9 +23,18 @@ CSV::Table::Row::Row(std::string line)
   }
 }
 
-std::ostream &CSV::Table::Row::print(std::ostream &os)
+std::uint32_t CSV::Table::Row::size()
 {
-  os << "> ";
+  return elements.size();
+}
+
+std::string CSV::Table::Row::get_element(std::uint32_t element_index)
+{
+  return elements.at(element_index);
+}
+
+std::ostream& CSV::Table::Row::print(std::ostream &os)
+{
   for(int i=0; i<elements.size(); i++)
   {
     os << elements.at(i);
@@ -70,6 +79,21 @@ CSV::Table::Table(std::string fname)
   }
 }
 
+std::uint32_t CSV::Table::size()
+{
+  return rows.size();
+}
+
+CSV::Table::Row CSV::Table::get_row(std::uint32_t row_index)
+{
+  return rows.at(row_index);
+}
+
+std::string CSV::Table::get_element(std::uint32_t row_index, std::uint32_t element_index)
+{
+  return get_row(row_index).get_element(element_index);
+}
+
 std::ostream& CSV::Table::print(std::ostream& os)
 {
   for(int i=0; i<rows.size(); i++)
@@ -82,13 +106,4 @@ std::ostream& CSV::Table::print(std::ostream& os)
 std::ostream& CSV::operator<<(std::ostream& os, Table table)
 {
   return table.print(os);
-}
-
-int main(int arv, char* argv[])
-{
-  CSV::Table table = CSV::Table("test2.csv");
-
-  std::cout << table;
-
-  return 0;
 }

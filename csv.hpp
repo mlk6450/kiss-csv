@@ -16,7 +16,10 @@ namespace CSV
       std::vector<std::string> elements;
     public:
       Row(std::string line);
-      
+
+      std::uint32_t size();
+      std::string get_element(std::uint32_t element_index);
+
       std::ostream& print(std::ostream& os);
     };
 
@@ -25,6 +28,10 @@ namespace CSV
 
   public:
     Table(std::string fname);
+
+    std::uint32_t size();
+    Row get_row(std::uint32_t row_index);
+    std::string get_element(std::uint32_t row_index, std::uint32_t element_index);
 
     std::ostream& print(std::ostream& os);
   };
