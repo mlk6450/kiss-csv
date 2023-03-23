@@ -3,8 +3,13 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 #include "csv.hpp"
+
+#ifndef MULTILINE_SUPPORT
+  #define MULTILINE_SUPPORT 1
+#endif
 
 CSV::Table::Row::Row()
 {
@@ -18,6 +23,7 @@ void CSV::Table::Row::push_back(std::string element)
 
 std::ostream &CSV::Table::Row::print(std::ostream &os)
 {
+  os << "> ";
   for(int i=0; i<elements.size(); i++)
   {
     os << elements.at(i);
@@ -43,9 +49,20 @@ CSV::Table::Table(std::string fname)
     throw "File does not exist";
   }
 
-  std::string line, element;
+  std::string line, extra, element;
   while (std::getline(file, line))
   {
+
+    #if (MULTILINE_SUPPORT == 1)
+      // If there is an odd number of '"' then element continues onto next line
+      while (std::count(line.begin(), line.end(), '"') % 2)
+      {
+        std::getline(file, extra);
+        line.append("\n");
+        line.append(extra);
+      }
+    #endif
+
     Row row = Row();
     std::stringstream str(line);
 
@@ -73,7 +90,7 @@ std::ostream& CSV::operator<<(std::ostream& os, Table table)
 
 int main(int arv, char* argv[])
 {
-  CSV::Table table = CSV::Table("test.csv");
+  CSV::Table table = CSV::Table("test2.csv");
 
   std::cout << table;
 
