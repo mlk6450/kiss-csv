@@ -15,9 +15,8 @@ namespace CSV
     private:
       std::vector<std::string> elements;
     public:
-      Row();
+      Row(std::string line);
       
-      void push_back(std::string element);
       std::ostream& print(std::ostream& os);
     };
 

@@ -11,14 +11,16 @@
   #define MULTILINE_SUPPORT 1
 #endif
 
-CSV::Table::Row::Row()
+CSV::Table::Row::Row(std::string line)
 {
+  std::string element;
 
-}
+  std::stringstream str(line);
 
-void CSV::Table::Row::push_back(std::string element)
-{
-  elements.push_back(element);
+  while (std::getline(str, element, ','))
+  {
+    elements.push_back(element);
+  }
 }
 
 std::ostream &CSV::Table::Row::print(std::ostream &os)
@@ -49,11 +51,12 @@ CSV::Table::Table(std::string fname)
     throw "File does not exist";
   }
 
-  std::string line, extra, element;
+  std::string line;
   while (std::getline(file, line))
   {
 
     #if (MULTILINE_SUPPORT == 1)
+      std::string extra;
       // If there is an odd number of '"' then element continues onto next line
       while (std::count(line.begin(), line.end(), '"') % 2)
       {
@@ -63,14 +66,7 @@ CSV::Table::Table(std::string fname)
       }
     #endif
 
-    Row row = Row();
-    std::stringstream str(line);
-
-    while (std::getline(str, element, ','))
-    {
-      row.push_back(element);
-    }
-    rows.push_back(row);
+    rows.push_back(Row(line));
   }
 }
 
