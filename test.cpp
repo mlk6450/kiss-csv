@@ -32,7 +32,7 @@ static const std::vector<std::string> print_results =
 int main(int arv, char* argv[])
 {
   // Read csv file
-  CSV::Table table = CSV::Table("test.csv");
+  CSV::Table table = CSV::Table("test.csv", ',');
   
   // Print table
   std::cout << "Printing table.." << std::endl;
@@ -49,7 +49,7 @@ int main(int arv, char* argv[])
   for (std::uint32_t row_index=0; row_index<table.size(); row_index++)
   {
     // Get the row
-    CSV::Table::Row row = table.get_row(row_index);
+    CSV::Table::Row row = table.at(row_index);
 
     // Test if the rows size is correct
     if (row.size() != 3)
@@ -61,7 +61,7 @@ int main(int arv, char* argv[])
     // Test if each element in the row is correct
     for (std::uint32_t element_index=0; element_index<row.size(); element_index++)
     {
-      std::string element = table.get_element(row_index, element_index);
+      std::string element = table.at(row_index, element_index);
       if (element.compare(element_results.at(row_index).at(element_index)))
       {
         std::cout << "Row " << row_index << " element " << element_index << " is incorrect" << std::endl;

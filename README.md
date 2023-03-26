@@ -10,22 +10,22 @@ Everything in the API should be self explanitory. Below are a few examples:
 
 ```C++
 // Read .csv table
-CSV::Table table = Table("path_to/my.csv");
+CSV::Table table = Table("path_to/my.csv", ',');
 
 // Get the length of my table
 std::uint32_t length = table.size();
 
-// Read element 0 in row 3
-std::string element = table.get_element(3, 0);
+// Read row 3 element 0
+std::string element = table.at(3, 0);
 
 // Get the number of elements for row 5
-std::uint32_t width = table.get_row(5).size();
+std::uint32_t width = table.at(5).size();
 
 // Print the table
 std::cout << table;
 
 // Print row 0
-std::cout << table.get_row(0);
+std::cout << table.at(0);
 ```
 
 ## Building

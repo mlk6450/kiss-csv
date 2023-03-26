@@ -15,10 +15,10 @@ namespace CSV
     private:
       std::vector<std::string> elements;
     public:
-      Row(std::string line);
+      Row(std::string line, char delimiter);
 
       std::uint32_t size();
-      std::string get_element(std::uint32_t element_index);
+      std::string at(std::uint32_t element_index);
 
       std::ostream& print(std::ostream& os);
     };
@@ -27,11 +27,11 @@ namespace CSV
     std::vector<Row> rows;
 
   public:
-    Table(std::string fname);
+    Table(std::string fname, char delimiter);
 
     std::uint32_t size();
-    Row get_row(std::uint32_t row_index);
-    std::string get_element(std::uint32_t row_index, std::uint32_t element_index);
+    Row at(std::uint32_t row_index);
+    std::string at(std::uint32_t row_index, std::uint32_t element_index);
 
     std::ostream& print(std::ostream& os);
   };

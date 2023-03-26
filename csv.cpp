@@ -11,13 +11,13 @@
   #define MULTILINE_SUPPORT 1
 #endif
 
-CSV::Table::Row::Row(std::string line)
+CSV::Table::Row::Row(std::string line, char delimiter)
 {
   std::string element;
 
   std::stringstream str(line);
 
-  while (std::getline(str, element, ','))
+  while (std::getline(str, element, delimiter))
   {
     elements.push_back(element);
   }
@@ -28,7 +28,7 @@ std::uint32_t CSV::Table::Row::size()
   return elements.size();
 }
 
-std::string CSV::Table::Row::get_element(std::uint32_t element_index)
+std::string CSV::Table::Row::at(std::uint32_t element_index)
 {
   return elements.at(element_index);
 }
@@ -52,7 +52,7 @@ std::ostream& CSV::operator<<(std::ostream& os, Table::Row row)
   return row.print(os);
 }
 
-CSV::Table::Table(std::string fname)
+CSV::Table::Table(std::string fname, char delimiter)
 {
   std::fstream file (fname, std::ios::in);
   if (!file.good())
@@ -75,7 +75,7 @@ CSV::Table::Table(std::string fname)
       }
     #endif
 
-    rows.push_back(Row(line));
+    rows.push_back(Row(line, delimiter));
   }
 }
 
@@ -84,14 +84,14 @@ std::uint32_t CSV::Table::size()
   return rows.size();
 }
 
-CSV::Table::Row CSV::Table::get_row(std::uint32_t row_index)
+CSV::Table::Row CSV::Table::at(std::uint32_t row_index)
 {
   return rows.at(row_index);
 }
 
-std::string CSV::Table::get_element(std::uint32_t row_index, std::uint32_t element_index)
+std::string CSV::Table::at(std::uint32_t row_index, std::uint32_t element_index)
 {
-  return get_row(row_index).get_element(element_index);
+  return at(row_index).at(element_index);
 }
 
 std::ostream& CSV::Table::print(std::ostream& os)
