@@ -13,7 +13,8 @@ static const std::vector<std::vector<std::string>> element_results =
   {"foo", "bar", "\"baz\""},
   {"foo", "bar", "\"\"baz\"\""},
   {"foo", "bar", "\"\"\"baz\"\"\""},
-  {"foo", "bar", "baz"}
+  {"foo", "bar", "baz"},
+  {"\"f,oo\"", "bar", "\"b,a,z\""}
 };
 
 static const std::vector<std::string> print_results =
@@ -26,7 +27,8 @@ static const std::vector<std::string> print_results =
   "foo,bar,\"baz\"\n",
   "foo,bar,\"\"baz\"\"\n",
   "foo,bar,\"\"\"baz\"\"\"\n",
-  "foo,bar,baz\n"
+  "foo,bar,baz\n",
+  "\"f,oo\",bar,\"b,a,z\"\n"
 };
 
 int main(int arv, char* argv[])
@@ -39,7 +41,7 @@ int main(int arv, char* argv[])
   std::cout << table;
 
   // Test for correct table size
-  if (table.size() != 9)
+  if (table.size() != 10)
   {
     std::cout << "Table size incorrect" << std::endl;
     return -1;

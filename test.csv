@@ -17,3 +17,4 @@ foo,bar,"baz"
 foo,bar,""baz""
 foo,bar,"""baz"""
 foo,bar,baz
+"f,oo",bar,"b,a,z"

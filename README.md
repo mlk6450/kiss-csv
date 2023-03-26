@@ -54,4 +54,13 @@ make distclean
 
 ## Notes
 
-If you want to *really* keep it simple, add the following parameter to the make variable CPPFLAGS "-D MULTILINE_SUPPORT=0". Doing so disables the library's ability to distinguish if a csv element spans multiple lines due to an open paren. This will improve performance slightly and reduce complexity. Note, ./test will fail if this flag is used.
+If you want to *really* keep it simple, add the following parameters to the make variable CPPFLAGS:
+
+* "-D QUOTED_MULTILINE_SUPPORT=0"
+* "-D QUOTED_DELIMITER_SUPPORT=0"
+ 
+The first of these disables the library's ability to distinguish if a csv line spans multiple lines in the source file due to a paren escaped element. 
+
+The second of these disables the library's ability to distinguish if a csv element contains an paren escaped dilimiter character.
+
+Adding either of these flag will slightly improve performance and reduce complexity. But NOTE, ./test will fail if they are used.

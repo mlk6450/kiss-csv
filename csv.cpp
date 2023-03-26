@@ -7,8 +7,12 @@
 
 #include "csv.hpp"
 
-#ifndef MULTILINE_SUPPORT
-  #define MULTILINE_SUPPORT 1
+#ifndef QUOTED_MULTILINE_SUPPORT
+  #define QUOTED_MULTILINE_SUPPORT 1
+#endif
+
+#ifndef QUOTED_DELIMITER_SUPPORT
+  #define QUOTED_DELIMITER_SUPPORT 1
 #endif
 
 CSV::Table::Row::Row(std::string line, char delimiter)
@@ -19,6 +23,16 @@ CSV::Table::Row::Row(std::string line, char delimiter)
 
   while (std::getline(str, element, delimiter))
   {
+    #if (QUOTED_DELIMITER_SUPPORT == 1)
+      std::string extra;
+      // If there is an odd number of '"' then element continues
+      while (std::count(element.begin(), element.end(), '"') % 2)
+      {
+        std::getline(str, extra, delimiter);
+        element.append(1, delimiter);
+        element.append(extra);
+      }
+    #endif
     elements.push_back(element);
   }
 }
@@ -64,9 +78,9 @@ CSV::Table::Table(std::string fname, char delimiter)
   while (std::getline(file, line))
   {
 
-    #if (MULTILINE_SUPPORT == 1)
+    #if (QUOTED_MULTILINE_SUPPORT == 1)
       std::string extra;
-      // If there is an odd number of '"' then element continues onto next line
+      // If there is an odd number of '"' then line continues onto next line of the file
       while (std::count(line.begin(), line.end(), '"') % 2)
       {
         std::getline(file, extra);
