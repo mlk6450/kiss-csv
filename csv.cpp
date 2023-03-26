@@ -1,8 +1,8 @@
+#include <fstream>
+#include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
-#include <iostream>
-#include <fstream>
-#include <sstream>
 #include <algorithm>
 
 #include "csv.hpp"
@@ -15,69 +15,45 @@
   #define QUOTED_DELIMITER_SUPPORT 1
 #endif
 
-CSV::Table::Row::Row(std::string line, char delimiter)
+CSV::Row CSV::parseLine(const std::string& line, char delimiter)
 {
-  std::string element;
+  Row row;
+  std::stringstream ss(line);
+  Cell cell;
 
-  std::stringstream str(line);
-
-  while (std::getline(str, element, delimiter))
+  while (std::getline(ss, cell, delimiter)) 
   {
     #if (QUOTED_DELIMITER_SUPPORT == 1)
-      std::string extra;
+      Cell extra;
       // If there is an odd number of '"' then element continues
-      while (std::count(element.begin(), element.end(), '"') % 2)
+      while (std::count(cell.begin(), cell.end(), '"') % 2)
       {
-        std::getline(str, extra, delimiter);
-        element.append(1, delimiter);
-        element.append(extra);
+        std::getline(ss, extra, delimiter);
+        cell.append(1, delimiter);
+        cell.append(extra);
       }
     #endif
-    elements.push_back(element);
+
+    row.push_back(cell);
   }
+
+  return row;
 }
 
-std::uint32_t CSV::Table::Row::size()
+CSV::Table CSV::parseFile(const std::string& filename, char delimiter) 
 {
-  return elements.size();
-}
+  Table table;
+  std::ifstream file(filename);
 
-std::string CSV::Table::Row::at(std::uint32_t element_index)
-{
-  return elements.at(element_index);
-}
-
-std::ostream& CSV::Table::Row::print(std::ostream &os)
-{
-  for(int i=0; i<elements.size(); i++)
+  if (!file.is_open()) 
   {
-    os << elements.at(i);
-    if (i < elements.size()-1)
-    {
-      os << ",";
-    }
-  }
-  os << std::endl;
-  return os;
-}
-
-std::ostream& CSV::operator<<(std::ostream& os, Table::Row row)
-{
-  return row.print(os);
-}
-
-CSV::Table::Table(std::string fname, char delimiter)
-{
-  std::fstream file (fname, std::ios::in);
-  if (!file.good())
-  {
-    throw "File does not exist";
+    std::cerr << "Failed to open file: " << filename << std::endl;
+    return table;
   }
 
   std::string line;
-  while (std::getline(file, line))
+  while (std::getline(file, line)) 
   {
-
     #if (QUOTED_MULTILINE_SUPPORT == 1)
       std::string extra;
       // If there is an odd number of '"' then line continues onto next line of the file
@@ -89,35 +65,34 @@ CSV::Table::Table(std::string fname, char delimiter)
       }
     #endif
 
-    rows.push_back(Row(line, delimiter));
+    table.push_back(parseLine(line, delimiter));
   }
+
+  file.close();
+
+  return table;
 }
 
-std::uint32_t CSV::Table::size()
+std::ostream& CSV::operator<<(std::ostream& os, Row row)
 {
-  return rows.size();
-}
-
-CSV::Table::Row CSV::Table::at(std::uint32_t row_index)
-{
-  return rows.at(row_index);
-}
-
-std::string CSV::Table::at(std::uint32_t row_index, std::uint32_t element_index)
-{
-  return at(row_index).at(element_index);
-}
-
-std::ostream& CSV::Table::print(std::ostream& os)
-{
-  for(int i=0; i<rows.size(); i++)
+  for(int i=0; i<row.size(); i++)
   {
-    os << rows.at(i);
+    os << row.at(i);
+    if (i < row.size()-1)
+    {
+      os << ",";
+    }
   }
+  os << std::endl;
+
   return os;
 }
 
 std::ostream& CSV::operator<<(std::ostream& os, Table table)
 {
-  return table.print(os);
+  for(int i=0; i<table.size(); i++)
+  {
+    os << table.at(i);
+  }
+  return os;
 }

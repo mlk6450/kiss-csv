@@ -33,8 +33,10 @@ static const std::vector<std::string> print_results =
 
 int main(int arv, char* argv[])
 {
+  using namespace CSV;
+
   // Read csv file
-  CSV::Table table = CSV::Table("test.csv", ',');
+  CSV::Table table = CSV::parseFile("test.csv", ',');
   
   // Print table
   std::cout << "Printing table.." << std::endl;
@@ -48,25 +50,25 @@ int main(int arv, char* argv[])
   }
 
   // For each row...
-  for (std::uint32_t row_index=0; row_index<table.size(); row_index++)
+  for (std::uint32_t row_idx=0; row_idx<table.size(); row_idx++)
   {
     // Get the row
-    CSV::Table::Row row = table.at(row_index);
+    CSV::Row row = table.at(row_idx);
 
     // Test if the rows size is correct
     if (row.size() != 3)
     {
-      std::cout << "Row " << row_index << " size is incorrect" << std::endl;
+      std::cout << "Row " << row_idx << " size is incorrect" << std::endl;
       return -1;
     }
 
     // Test if each element in the row is correct
-    for (std::uint32_t element_index=0; element_index<row.size(); element_index++)
+    for (std::uint32_t cell_idx=0; cell_idx<row.size(); cell_idx++)
     {
-      std::string element = table.at(row_index, element_index);
-      if (element.compare(element_results.at(row_index).at(element_index)))
+      Cell cell = table.at(row_idx).at(cell_idx);
+      if (cell.compare(element_results.at(row_idx).at(cell_idx)))
       {
-        std::cout << "Row " << row_index << " element " << element_index << " is incorrect" << std::endl;
+        std::cout << "Row " << row_idx << " cell " << cell_idx << " is incorrect" << std::endl;
         return -1;
       }
     }
@@ -75,11 +77,22 @@ int main(int arv, char* argv[])
     std::stringstream ss;
     ss << row;
     std::string row_string = ss.str();    
-    if (row_string.compare(print_results.at(row_index)))
+    if (row_string.compare(print_results.at(row_idx)))
     {
-      std::cout << "Row " << row_index << " prints incorrectly" << std::endl;
+      std::cout << "Row " << row_idx << " prints incorrectly" << std::endl;
       return -1;
     }
+  }
+
+  // test adding lines
+  std::string newline = "banana,apple,orange";
+  table.push_back(parseLine(newline, ','));
+  if (  table.at(10).at(0).compare("banana") |
+        table.at(10).at(1).compare("apple") |
+        table.at(10).at(2).compare("orange") )
+  {
+    std::cout << "New entry not added correctly" << std::endl;
+    return -1;
   }
 
   std::cout << "All tests passed!" << std::endl;

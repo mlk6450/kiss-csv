@@ -7,36 +7,14 @@
 
 namespace CSV
 {
-  class Table
-  {
-  public:
-    class Row
-    {
-    private:
-      std::vector<std::string> elements;
-    public:
-      Row(std::string line, char delimiter);
+  typedef std::string Cell;
+  typedef std::vector<Cell> Row;
+  typedef std::vector<Row> Table;
 
-      std::uint32_t size();
-      std::string at(std::uint32_t element_index);
+  Row parseLine(const std::string& line, char delimiter);
+  Table parseFile(const std::string& filename, char delimiter);
 
-      std::ostream& print(std::ostream& os);
-    };
-
-  private:
-    std::vector<Row> rows;
-
-  public:
-    Table(std::string fname, char delimiter);
-
-    std::uint32_t size();
-    Row at(std::uint32_t row_index);
-    std::string at(std::uint32_t row_index, std::uint32_t element_index);
-
-    std::ostream& print(std::ostream& os);
-  };
-
-  std::ostream& operator<<(std::ostream& os, Table::Row row);
+  std::ostream& operator<<(std::ostream& os, Row row);
   std::ostream& operator<<(std::ostream& os, Table table);
 }
 

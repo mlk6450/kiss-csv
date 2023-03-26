@@ -9,14 +9,17 @@ Keep it simple stupid CSV reader is exactly what it sounds like. It is a simple 
 Everything in the API should be self explanitory. Below are a few examples:
 
 ```C++
+// Namespace must be included to support << override
+using namespace CSV;
+
 // Read .csv table
-CSV::Table table = Table("path_to/my.csv", ',');
+CSV::Table table = parseFile("path_to/my.csv", ',');
 
 // Get the length of my table
 std::uint32_t length = table.size();
 
 // Read row 3 element 0
-std::string element = table.at(3, 0);
+std::string element = table.at(3).at(0);
 
 // Get the number of elements for row 5
 std::uint32_t width = table.at(5).size();
