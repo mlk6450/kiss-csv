@@ -13,6 +13,7 @@ namespace CSV
   typedef std::vector<Cell> Row;
   typedef std::vector<Row> Table;
 
+  Row parseQuotedLine(const std::string& line, char delimiter = DEFUALT_DELIMITER);
   Row parseLine(const std::string& line, char delimiter = DEFUALT_DELIMITER);
   Table parseFile(const std::string& filename, char delimiter = DEFUALT_DELIMITER);
 

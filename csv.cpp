@@ -15,6 +15,17 @@
   #define QUOTED_DELIMITER_SUPPORT 1
 #endif
 
+CSV::Row CSV::parseQuotedLine(const std::string& line, char delimiter)
+{
+  std::string copy = line;
+  std::size_t first = copy.find_first_of("\"");
+  std::size_t last = copy.find_last_of("\"");
+  copy.erase(last, 1);
+  copy.erase(first, 1);
+
+  return parseLine(copy, delimiter);
+}
+
 CSV::Row CSV::parseLine(const std::string& line, char delimiter)
 {
   Row row;

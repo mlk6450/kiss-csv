@@ -95,6 +95,18 @@ int main(int arv, char* argv[])
     return -1;
   }
 
+
+  // test adding quoted lines
+  std::string quotedline = "\"banana,apple,orange\"";
+  table.push_back(parseQuotedLine(quotedline, ','));
+  if (  table.at(10).at(0).compare("banana") |
+        table.at(10).at(1).compare("apple") |
+        table.at(10).at(2).compare("orange") )
+  {
+    std::cout << "New entry not added correctly" << std::endl;
+    return -1;
+  }
+
   std::cout << "All tests passed!" << std::endl;
 
   return 0;
