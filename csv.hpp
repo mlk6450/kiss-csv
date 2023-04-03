@@ -6,6 +6,7 @@
 #include <iostream>
 
 #define DEFUALT_DELIMITER (',')
+#define COMMENT_CHARACTER ('#')
 
 namespace CSV
 {

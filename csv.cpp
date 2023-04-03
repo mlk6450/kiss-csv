@@ -15,6 +15,14 @@
   #define QUOTED_DELIMITER_SUPPORT 1
 #endif
 
+#ifndef COMMENT_LINE_SUPPORT
+  #define COMMENT_LINE_SUPPORT 1
+#endif
+
+#ifndef BLANK_LINE_SUPPORT
+  #define BLANK_LINE_SUPPORT 1
+#endif
+
 CSV::Row CSV::parseQuotedLine(const std::string& line, char delimiter)
 {
   std::string copy = line;
@@ -65,6 +73,20 @@ CSV::Table CSV::parseFile(const std::string& filename, char delimiter)
   std::string line;
   while (std::getline(file, line)) 
   {
+    #if (BLANK_LINE_SUPPORT == 1)
+      if (line.length() == 0)
+      {
+        continue;
+      }
+    #endif
+
+    #if (COMMENT_LINE_SUPPORT == 1)
+      if (line.at(0) == COMMENT_CHARACTER)
+      {
+        continue;
+      }
+    #endif
+
     #if (QUOTED_MULTILINE_SUPPORT == 1)
       std::string extra;
       // If there is an odd number of '"' then line continues onto next line of the file

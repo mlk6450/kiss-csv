@@ -1,4 +1,5 @@
 foo,bar,baz
+#this,is,a,test,"of, commenting"
 foo,"bar",baz
 foo,"b""ar",baz
 foo,"b
@@ -15,6 +16,7 @@ r
 ",baz
 foo,bar,"baz"
 foo,bar,""baz""
+
 foo,bar,"""baz"""
 foo,bar,baz
 "f,oo",bar,"b,a,z"
